@@ -9,10 +9,10 @@ export const httpGET = async (url) => {
   });
   return response.data;
 };
-export const generateSoftColorCode = () => {
+export const generateSoftColorCode = (colorList) => {
   // min and max range to avoid solid colors
-  const maxColorValue = 220;
-  const minColorValue = 160;
+  const maxColorValue = 235;
+  const minColorValue = 130;
   // Generate random colors within the range
   const red = Math.floor(
     Math.random() * (maxColorValue - minColorValue + 1) + minColorValue
@@ -28,7 +28,9 @@ export const generateSoftColorCode = () => {
     16
   )}`;
 
-  return colorCode;
+  return colorList.includes(colorCode)
+    ? generateSoftColorCode(colorList)
+    : colorCode;
 };
 
 export const formatDate = (dateString) => {

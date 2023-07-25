@@ -3,12 +3,32 @@ import { Bookmark } from "react-feather";
 import { formatDate, generateSoftColorCode } from "../../Utils/helpers";
 
 export default function M_Card(props) {
-  const { company, created_date, hourly_rate, location, tags, title } = props;
+  const {
+    company,
+    created_date,
+    hourly_rate,
+    location,
+    tags,
+    title,
+    onColorAdd,
+    colorList,
+    page,
+  } = props;
+  const [color, setColor] = React.useState("#fff");
+  React.useEffect(() => {
+    getColorData();
+  }, [page]);
+  let getColorData = () => {
+    let randomColor = generateSoftColorCode(colorList);
+    setColor(randomColor);
+    onColorAdd(randomColor);
+  };
+
   return (
     <div class="bg-white max-w-lg p-4   rounded-2xl overflow-hidden shadow-md">
       <div
         class="w-full   bg-red-200 p-4 rounded-2xl gap-1"
-        style={{ backgroundColor: generateSoftColorCode() }}
+        style={{ backgroundColor: color }}
       >
         <div className="flex justify-between items-center font-semibold">
           <div className="date bg-white p-2 rounded-full ">
@@ -44,7 +64,7 @@ export default function M_Card(props) {
         <div className="flex justify-between">
           <div className="font-semibold">
             <div class="text-lg font-semibold ">${hourly_rate}/hr</div>
-            <h2 class="text-sm  text-gray-600 ">location</h2>
+            <h2 class="text-sm  text-gray-600 ">{location}</h2>
           </div>
           <div className=" bg-black  text-sm  px-6 font-semibold rounded-full flex items-center text-gray-200">
             Details

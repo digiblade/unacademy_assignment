@@ -3,6 +3,7 @@ import React from "react";
 import M_Card from "./Components/Molecules/M_Card";
 import { httpGET } from "./Utils/helpers";
 function App() {
+  const [colorList, setColorList] = React.useState([]);
   const [details, setDetails] = React.useState({
     count: 100,
     jobs: [
@@ -128,6 +129,9 @@ function App() {
       },
     ],
   });
+  const handleColorList = (color) => {
+    setColorList((oldColors) => [...oldColors, color]);
+  };
   const [page, setPage] = React.useState(1);
   const getDetails = async () => {
     let response = await httpGET(`/jobs?page=${page}`);
@@ -145,6 +149,7 @@ function App() {
   };
   React.useEffect(() => {
     // getDetails();
+    setColorList([]);
   }, [page]);
   return (
     <div className="lg:px-10 md:px-8 sm:px-6 py-4">
@@ -158,7 +163,12 @@ function App() {
       </header>
       <main className="mt-4 grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-1">
         {details.jobs.map((item) => (
-          <M_Card {...item} />
+          <M_Card
+            onColorAdd={handleColorList}
+            colorList={colorList}
+            page={page}
+            {...item}
+          />
         ))}
       </main>
       <footer className="mt-4">
@@ -169,7 +179,7 @@ function App() {
               handlePageChange(-1);
             }}
             className={`cursor-pointer px-3 py-1 ${
-              page == 1
+              page === 1
                 ? "bg-gray-100 text-gray-400"
                 : "bg-gray-300 text-gray-600"
             } rounded-lg`}
