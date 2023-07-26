@@ -4,138 +4,17 @@ import M_Card from "./Components/Molecules/M_Card";
 import { httpGET } from "./Utils/helpers";
 function App() {
   const [colorList, setColorList] = React.useState([]);
-  const [details, setDetails] = React.useState({
-    count: 100,
-    jobs: [
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company C",
-        },
-        created_date: "2023-07-25T18:28:44.805105",
-        hourly_rate: 27,
-        location: "City 1",
-        tags: ["DevOps", "AWS"],
-        title: "Job Title 0",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company D",
-        },
-        created_date: "2023-07-25T18:28:44.805133",
-        hourly_rate: 36,
-        location: "City 1",
-        tags: ["React", "JS"],
-        title: "Job Title 1",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company B",
-        },
-        created_date: "2023-07-25T18:28:44.805139",
-        hourly_rate: 45,
-        location: "City 2",
-        tags: ["Python", "Flask"],
-        title: "Job Title 2",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company B",
-        },
-        created_date: "2023-07-25T18:28:44.805145",
-        hourly_rate: 50,
-        location: "City 4",
-        tags: ["React", "JS"],
-        title: "Job Title 3",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company A",
-        },
-        created_date: "2023-07-25T18:28:44.805150",
-        hourly_rate: 29,
-        location: "City 1",
-        tags: ["React", "JS"],
-        title: "Job Title 4",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company B",
-        },
-        created_date: "2023-07-25T18:28:44.805156",
-        hourly_rate: 31,
-        location: "City 4",
-        tags: ["Python", "Flask"],
-        title: "Job Title 5",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company D",
-        },
-        created_date: "2023-07-25T18:28:44.805162",
-        hourly_rate: 32,
-        location: "City 1",
-        tags: ["React", "JS"],
-        title: "Job Title 6",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company B",
-        },
-        created_date: "2023-07-25T18:28:44.805167",
-        hourly_rate: 49,
-        location: "City 2",
-        tags: ["ML", "TensorFlow"],
-        title: "Job Title 7",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company A",
-        },
-        created_date: "2023-07-25T18:28:44.805172",
-        hourly_rate: 36,
-        location: "City 1",
-        tags: ["React", "JS"],
-        title: "Job Title 8",
-      },
-      {
-        company: {
-          logo_url:
-            "https://uam-cdn.nextlevel.app/assets/logos/NextLevel_Logo.png",
-          name: "Company C",
-        },
-        created_date: "2023-07-25T18:28:44.805178",
-        hourly_rate: 40,
-        location: "City 1",
-        tags: ["React", "JS"],
-        title: "Job Title 9",
-      },
-    ],
-  });
+  const [details, setDetails] = React.useState({});
+  const [isLoading, setIsLoading] = React.useState(false);
   const handleColorList = (color) => {
     setColorList((oldColors) => [...oldColors, color]);
   };
   const [page, setPage] = React.useState(1);
   const getDetails = async () => {
+    setIsLoading(true);
     let response = await httpGET(`/jobs?page=${page}`);
-    setPage(response);
+    setDetails(response);
+    setIsLoading(false);
   };
   const handlePageChange = (opt) => {
     let currentPage = page + parseInt(opt);
@@ -148,7 +27,7 @@ function App() {
     }
   };
   React.useEffect(() => {
-    // getDetails();
+    getDetails();
     setColorList([]);
   }, [page]);
   return (
@@ -157,19 +36,54 @@ function App() {
         <div className="title text-2xl">
           Recommended jobs{" "}
           <span className="border-2 p-1 px-2 font-semibold text-sm  border-neutral-500 border-opacity-75 rounded-full">
-            100
+            {details && details.count ? details.count : ""}
           </span>
         </div>
       </header>
       <main className="mt-4 grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-1">
-        {details.jobs.map((item) => (
-          <M_Card
-            onColorAdd={handleColorList}
-            colorList={colorList}
-            page={page}
-            {...item}
-          />
-        ))}
+        {isLoading ? (
+          <>
+            <div class="max-w-sm  bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="animate-pulse bg-gray-200 h-40 w-full"></div>
+              <div class="p-4">
+                <div class="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+            <div class="max-w-sm  bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="animate-pulse bg-gray-200 h-40 w-full"></div>
+              <div class="p-4">
+                <div class="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+            <div class="max-w-sm  bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="animate-pulse bg-gray-200 h-40 w-full"></div>
+              <div class="p-4">
+                <div class="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+            <div class="max-w-sm  bg-white shadow-lg rounded-lg overflow-hidden">
+              <div class="animate-pulse bg-gray-200 h-40 w-full"></div>
+              <div class="p-4">
+                <div class="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+          </>
+        ) : (
+          details &&
+          details.jobs &&
+          details.jobs.map((item) => (
+            <M_Card
+              onColorAdd={handleColorList}
+              colorList={colorList}
+              page={page}
+              {...item}
+            />
+          ))
+        )}
       </main>
       <footer className="mt-4">
         <div className="flex items-center justify-center space-x-2">
